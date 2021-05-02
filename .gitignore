@@ -1,0 +1,6 @@
+.venv
+.nodeenv
+.idea
+.pytest_cache
+requirements.txt
+*.epub
