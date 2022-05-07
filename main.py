@@ -58,6 +58,7 @@ def convert_blog(output_dir, entry):
     author = entry['author'][0]['name']['$t']
     alternate_link = next((link for link in entry['link'] if link['rel'] == 'alternate'), None)
     title = alternate_link['title']
+    file_name = title.replace('*', '')
     href = alternate_link['href']
     published_str = entry['published']['$t']
     updated_str = entry['updated']['$t']
@@ -68,7 +69,7 @@ def convert_blog(output_dir, entry):
     html_content = entry['content']['$t']
     full_dir = f"{output_dir}/{published_year}/{published_month}/{published_day}"
     Path(full_dir).mkdir(parents=True, exist_ok=True)
-    create_epub(f"{full_dir}/{title}.epub", blog_id, title, html_content, author, href, published_str, updated_str)
+    create_epub(f"{full_dir}/{file_name}.epub", blog_id, title, html_content, author, href, published_str, updated_str)
 
 
 def download_blog_posts(output_dir, input_url):
