@@ -1,6 +1,6 @@
 import argparse
 
-from utils import convert_to_epub as convert_epub
+from util.utils import convert_to_epub as convert_epub
 
 my_parser = argparse.ArgumentParser(description='Convert blog post(s) as single epub')
 
