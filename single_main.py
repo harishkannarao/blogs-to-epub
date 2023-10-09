@@ -18,7 +18,11 @@ def get_all_urls(initial_url):
         all_urls.append(url)
         response = requests.get(url)
         res_json = response.json()
-        url = next((link['href'] for link in res_json['feed']['link'] if link['rel'] == 'next'), None)
+        url = None
+        links = res_json['feed']['link']
+        for link in links:
+            if link['rel'] == 'next':
+                url = link['href']
 
     return all_urls
 
