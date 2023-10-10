@@ -17,7 +17,7 @@ def get_all_urls(initial_url):
 
     return all_urls
 
-def convert_to_epub(output_dir, file_name, url):
+def convert_to_single_epub(output_dir, file_name, url):
     Path(output_dir).mkdir(parents=True, exist_ok=True)
     urls = get_all_urls(url)
     print(urls)

@@ -1,4 +1,4 @@
-from blog_to_epub.util.utils import convert_to_epub as convert_epub
+from blog_to_epub.util.utils import convert_to_single_epub as convert_single_epub
 import argparse
 
 my_parser = argparse.ArgumentParser(description='Convert blog post(s) as single epub')
@@ -13,6 +13,5 @@ args = my_parser.parse_args()
 def download_epub():
     print(args)
     if args.single_file:
-        print('Single File')
-    convert_epub(args.dir, args.name, args.url)
+        convert_single_epub(args.dir, args.name, args.url)
     return
