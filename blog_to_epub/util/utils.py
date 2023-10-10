@@ -7,7 +7,6 @@ def get_all_urls(initial_url):
     all_urls = []
     url = initial_url
     while url is not None:
-        print(url)
         all_urls.append(url)
         response = requests.get(url)
         res_json = response.json()
@@ -20,18 +19,20 @@ def get_all_urls(initial_url):
 
 def get_all_chapters(urls):
     chapters = []
-    for url in urls:
+    chapter_index = 1
+    for url in reversed(urls):
         response = requests.get(url)
         res_json = response.json()
         if 'entry' in res_json['feed']:
-            for entry in res_json['feed']['entry']:
+            for entry in reversed(res_json['feed']['entry']):
                 html_content = entry['content']['$t']
                 title = ''
                 for entry_link in entry['link']:
                     if entry_link['rel'] == 'alternate':
                         title = entry_link['title']
-                html_chapter = epub.EpubHtml(title=title, file_name="html.xhtml", lang='en')
+                html_chapter = epub.EpubHtml(title=title, file_name=f"chapter_{chapter_index}.xhtml", lang='en')
                 html_chapter.content = html_content
+                chapter_index = chapter_index + 1
                 chapters.append(html_chapter)
     return chapters
 
@@ -49,7 +50,7 @@ def write_to_epub(output_dir, file_name, url, chapters):
 
     book = epub.EpubBook()
     book.set_identifier(url)
-    book.set_title(url)
+    book.set_title(file_name)
     book.set_language('en')
     book.add_author('Unknown')
 
@@ -73,5 +74,4 @@ def convert_to_single_epub(output_dir, file_name, url):
     urls = get_all_urls(url)
     chapters = get_all_chapters(urls)
     write_to_epub(output_dir, file_name, url, chapters)
-    print(urls)
     return

@@ -11,7 +11,6 @@ my_parser.add_argument('--name', '-n', action='store', type=str, required=False)
 args = my_parser.parse_args()
 
 def download_epub():
-    print(args)
     if args.single_file:
         convert_single_epub(args.dir, args.name, args.url)
     return
