@@ -20,13 +20,21 @@ Credit goes to the authors and contributors of the following repositories:
 
     make init
 
-### Run python script to convert entire blog post(s) to epub
+### Run python script to convert entire blog post(s) to individual epubs
 
     pipenv run python main.py --dir /tmp --url '<<BLOG_URL>>/feeds/posts/default?alt=json'
 
 example
 
     pipenv run python main.py --dir /tmp --url 'http://blogs.harishkannarao.com/feeds/posts/default?alt=json'
+
+### Run python script to convert entire blog post(s) to single epub
+
+    pipenv run python main.py --dir /tmp --single-file --name example_name --url '<<BLOG_URL>>/feeds/posts/default?alt=json'
+
+example
+
+    pipenv run python main.py --dir /tmp --single-file --name harish_blogs --url 'http://blogs.harishkannarao.com/feeds/posts/default?alt=json'
 
 #### Other Url formats to filter the blogs
 

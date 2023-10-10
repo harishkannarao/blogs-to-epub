@@ -1,4 +1,5 @@
 from blog_to_epub.util.utils import convert_to_single_epub as convert_single_epub
+from blog_to_epub.multiple.multiple import download_all
 import argparse
 
 my_parser = argparse.ArgumentParser(description='Convert blog post(s) as single epub')
@@ -12,5 +13,9 @@ args = my_parser.parse_args()
 
 def download_epub():
     if args.single_file:
+        if args.name is None:
+            raise SystemExit('error: argument --name/-n is expected when --single-file/-sf is set')
         convert_single_epub(args.dir, args.name, args.url)
+    else:
+        download_all(args.dir, args.url)
     return
