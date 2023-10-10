@@ -5,7 +5,7 @@ from dateutil.parser import parse
 
 
 def create_epub(file, blog_id, title, html_content, author, href, published, updated):
-    html_chapter = epub.EpubHtml(title=title, file_name=f"html.xhtml", lang='en')
+    html_chapter = epub.EpubHtml(title=title, file_name="html.xhtml", lang='en')
     html_chapter.content = html_content
 
     meta_content = f"""
@@ -15,7 +15,7 @@ def create_epub(file, blog_id, title, html_content, author, href, published, upd
     <p>Published: {published}</p>
     <p>Updated: {updated}</p>
     """
-    meta_chapter = epub.EpubHtml(title='Meta Data', file_name=f"meta.xhtml", lang='en')
+    meta_chapter = epub.EpubHtml(title='Meta Data', file_name="meta.xhtml", lang='en')
     meta_chapter.content = meta_content
 
     chapters = [html_chapter, meta_chapter]
@@ -74,6 +74,7 @@ def download_blog_posts(output_dir, input_url):
             convert_blog(output_dir, entry)
 
     return next((link['href'] for link in res_json['feed']['link'] if link['rel'] == 'next'), None)
+
 
 def download_all(output_dir, input_url):
     url = input_url

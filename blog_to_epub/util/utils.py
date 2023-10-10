@@ -3,6 +3,7 @@ from pathlib import Path
 from ebooklib import epub
 from datetime import datetime, timezone
 
+
 def get_all_urls(initial_url):
     all_urls = []
     url = initial_url
@@ -16,6 +17,7 @@ def get_all_urls(initial_url):
                 url = link['href']
 
     return all_urls
+
 
 def get_all_chapters(urls):
     chapters = []
@@ -35,6 +37,7 @@ def get_all_chapters(urls):
                 chapter_index = chapter_index + 1
                 chapters.append(html_chapter)
     return chapters
+
 
 def write_to_epub(output_dir, file_name, url, chapters):
     meta_content = f"""
@@ -68,6 +71,7 @@ def write_to_epub(output_dir, file_name, url, chapters):
 
     # create epub file
     epub.write_epub(f"{output_dir}/{file_name}.epub", book, {})
+
 
 def convert_to_single_epub(output_dir, file_name, url):
     Path(output_dir).mkdir(parents=True, exist_ok=True)
