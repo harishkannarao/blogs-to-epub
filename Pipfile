@@ -11,6 +11,9 @@ python-dateutil = "*"
 
 [dev-packages]
 flake8 = "*"
+pytest = "*"
+pytest-html = "*"
+assertpy = "*"
 
 [requires]
 python_version = "3.9"
