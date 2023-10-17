@@ -1,10 +1,10 @@
-import dataclasses
+from dataclasses import dataclass
 
 import pytest
 from pathlib import Path
 
 
-@dataclasses.dataclass
+@dataclass
 class MkdirCall:
     path: str
     kwargs: any
