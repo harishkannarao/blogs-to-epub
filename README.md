@@ -54,6 +54,10 @@ Filter blogs by categories
 
     '<<BLOG_URL>>/feeds/posts/default?alt=json&category=foo'
 
+### Run tests
+
+    make test
+
 ### Verify flake8
 
     make flake8

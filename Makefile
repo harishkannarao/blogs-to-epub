@@ -4,8 +4,11 @@ init:
 	pip install pipenv --upgrade
 	pipenv install --dev
 
+unit_test:
+	pipenv run python -m pytest tests/unit/ --html=report.html --self-contained-html
+
 test:
-	pipenv run python -m pytest --html=report.html --self-contained-html
+	make unit_test
 
 flake8:
 	pipenv run flake8 --ignore=E501 --exclude=.venv,.git # ignore max line length
