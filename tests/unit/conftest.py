@@ -9,6 +9,7 @@ class MkdirCall:
     path: str
     kwargs: any
 
+
 @pytest.fixture
 def path_mkdir_fixture(monkeypatch) -> list[MkdirCall]:
     mkdir_calls: list[MkdirCall] = []
