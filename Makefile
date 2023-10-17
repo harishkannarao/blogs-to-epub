@@ -5,7 +5,7 @@ init:
 	pipenv install --dev
 
 unit_test:
-	pipenv run python -m pytest tests/unit/ --html=report.html --self-contained-html
+	pipenv run python -m pytest tests/unit/ --html=unit-test-report.html --self-contained-html
 
 test:
 	make unit_test

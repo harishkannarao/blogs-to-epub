@@ -4,4 +4,4 @@
 .pytest_cache
 requirements.txt
 *.epub
-report.html
+*-report.html
