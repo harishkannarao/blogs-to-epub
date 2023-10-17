@@ -4,7 +4,7 @@ from ebooklib import epub
 from datetime import datetime, timezone
 
 
-def get_all_urls(initial_url):
+def get_all_urls(initial_url: str) -> list[str]:
     all_urls = []
     url = initial_url
     while url is not None:
@@ -19,7 +19,7 @@ def get_all_urls(initial_url):
     return all_urls
 
 
-def get_all_chapters(urls):
+def get_all_chapters(urls: list[str]) -> list[epub.EpubHtml]:
     chapters = []
     chapter_index = 1
     for url in reversed(urls):
@@ -39,7 +39,7 @@ def get_all_chapters(urls):
     return chapters
 
 
-def write_to_epub(output_dir, file_name, url, chapters):
+def write_to_epub(output_dir: str, file_name: str, url: str, chapters: list[epub.EpubHtml]) -> None:
     meta_content = f"""
         <h1>Meta Data</h1>
         <p>Url: {url}</p>
@@ -73,9 +73,9 @@ def write_to_epub(output_dir, file_name, url, chapters):
     epub.write_epub(f"{output_dir}/{file_name}.epub", book, {})
 
 
-def convert_to_single_epub(output_dir, file_name, url):
+def convert_to_single_epub(output_dir: str, file_name: str, url: str):
     Path(output_dir).mkdir(parents=True, exist_ok=True)
-    urls = get_all_urls(url)
-    chapters = get_all_chapters(urls)
+    urls: list[str] = get_all_urls(url)
+    chapters: list[epub.EpubHtml] = get_all_chapters(urls)
     write_to_epub(output_dir, file_name, url, chapters)
     return
