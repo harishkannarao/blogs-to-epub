@@ -1,13 +1,20 @@
+import dataclasses
+
 import pytest
 from pathlib import Path
 
 
-@pytest.fixture
-def path_mkdir_fixture(monkeypatch):
-    mkdir_calls = []
+@dataclasses.dataclass
+class MkdirCall:
+    path: str
+    kwargs: any
 
-    def mock_mkdir(self: Path, *args, **kwargs):
-        mkdir_calls.append({'path': str(self), 'kwargs': kwargs})
+@pytest.fixture
+def path_mkdir_fixture(monkeypatch) -> list[MkdirCall]:
+    mkdir_calls: list[MkdirCall] = []
+
+    def mock_mkdir(self: Path, *args, **kwargs: any):
+        mkdir_calls.append(MkdirCall(str(self), kwargs))
         return
 
     monkeypatch.setattr(Path, "mkdir", mock_mkdir)
