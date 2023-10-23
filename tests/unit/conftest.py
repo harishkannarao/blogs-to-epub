@@ -25,18 +25,18 @@ def path_mkdir_fixture(monkeypatch) -> list[MkdirCall]:
     yield mkdir_calls
 
 
-@dataclass
+@dataclass(frozen=True)
 class WriteEpubCall:
     name: str
     book: epub.EpubBook
-    options: any
+    options: dict[any]
 
 
 @pytest.fixture
 def epub_write_fixture(monkeypatch) -> list[WriteEpubCall]:
     write_epub_calls: list[WriteEpubCall] = []
 
-    def mock_write_epub(name: str, book: epub.EpubBook, options: any = None):
+    def mock_write_epub(name: str, book: epub.EpubBook, options: dict[any] = None):
         write_epub_calls.append(WriteEpubCall(name, book, options))
         return
 
