@@ -3,20 +3,22 @@ from dataclasses import dataclass
 import pytest
 from pathlib import Path
 from ebooklib import epub
+from types import MappingProxyType
 
 
-@dataclass
+@dataclass(frozen=True)
 class MkdirCall:
     path: str
-    kwargs: any
+    args: tuple[any]
+    kwargs: MappingProxyType[any]
 
 
 @pytest.fixture
 def path_mkdir_fixture(monkeypatch) -> list[MkdirCall]:
     mkdir_calls: list[MkdirCall] = []
 
-    def mock_mkdir(self: Path, *args, **kwargs: any):
-        mkdir_calls.append(MkdirCall(str(self), kwargs))
+    def mock_mkdir(self: Path, *args: any, **kwargs: any):
+        mkdir_calls.append(MkdirCall(str(self), tuple(args), MappingProxyType(kwargs)))
         return
 
     monkeypatch.setattr(Path, "mkdir", mock_mkdir)
