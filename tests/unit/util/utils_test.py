@@ -8,10 +8,12 @@ def test__write_to_epub__creates_epub_book(
         epub_write_fixture: list[WriteEpubCall]):
 
     url = "http://example.com"
-    write_to_epub("/tmp/path", "some-name", url, [])
+    output_dir = "/tmp/path"
+    file_name = "some-name"
+    write_to_epub(output_dir, file_name, url, [])
 
     assert_that(epub_write_fixture).is_length(1)
-    assert_that(epub_write_fixture[0].name).is_equal_to("/tmp/path/some-name.epub")
+    assert_that(epub_write_fixture[0].name).is_equal_to(output_dir + "/" + file_name + ".epub")
     assert_that(epub_write_fixture[0].options).is_equal_to({})
     result = epub_write_fixture[0].book
     assert_that(result.items).is_length(3)
