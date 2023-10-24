@@ -1,9 +1,10 @@
 from dataclasses import dataclass
+from pathlib import Path
+from types import MappingProxyType
 
 import pytest
-from pathlib import Path
 from ebooklib import epub
-from types import MappingProxyType
+import requests
 
 
 @dataclass(frozen=True)
@@ -42,3 +43,31 @@ def epub_write_fixture(monkeypatch) -> list[WriteEpubCall]:
 
     monkeypatch.setattr(epub, "write_epub", mock_write_epub)
     yield write_epub_calls
+
+
+@dataclass(frozen=True)
+class RequestsGetCall:
+    args: tuple[any]
+    kwargs: MappingProxyType[any]
+
+
+@dataclass(frozen=True)
+class MockGetResponse:
+    response: any
+
+
+@pytest.fixture
+def requests_get_fixture(monkeypatch) -> (list[RequestsGetCall], list[MockGetResponse]):
+    requests_get_calls: list[RequestsGetCall] = []
+    mock_get_responses: list[MockGetResponse] = []
+
+    def mock_get(*args: any, **kwargs: any):
+        requests_get_calls.append(RequestsGetCall(tuple(args), MappingProxyType(kwargs)))
+        if len(mock_get_responses) == 0:
+            raise RuntimeError("response list is empty")
+        resp = mock_get_responses[0]
+        del mock_get_responses[0]
+        return resp
+
+    monkeypatch.setattr(requests, "get", mock_get)
+    yield requests_get_calls, mock_get_responses
