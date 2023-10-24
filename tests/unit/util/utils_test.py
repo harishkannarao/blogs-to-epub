@@ -12,7 +12,7 @@ def test__write_to_epub__creates_epub_book(
     first_chapter = epub.EpubHtml(title="first_chapter", file_name="first_chapter.xhtml", lang='en',
                                   content="first chapter content")
     second_chapter = epub.EpubHtml(title="second_chapter", file_name="second_chapter.xhtml", lang='en',
-                                  content="second chapter content")
+                                   content="second chapter content")
 
     write_to_epub(output_dir, file_name, url, [first_chapter, second_chapter])
 
