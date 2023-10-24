@@ -19,3 +19,6 @@ def test__write_to_epub__creates_epub_book(
     assert_that(result.items).is_length(3)
     first_chapter: epub.EpubHtml = result.items[0]
     assert_that(first_chapter.content).contains("Url: " + url)
+
+    assert_that(result.items[1]).is_instance_of(epub.EpubNcx)
+    assert_that(result.items[2]).is_instance_of(epub.EpubNav)
