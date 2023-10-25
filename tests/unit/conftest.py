@@ -55,6 +55,9 @@ class RequestsGetCall:
 class MockGetResponse:
     response: any
 
+    def json(self):
+        return self.response
+
 
 @pytest.fixture
 def requests_get_fixture(monkeypatch) -> (list[RequestsGetCall], list[MockGetResponse]):

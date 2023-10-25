@@ -1,5 +1,5 @@
-from tests.unit.conftest import WriteEpubCall
-from blog_to_epub.util.utils import write_to_epub
+from tests.unit.conftest import WriteEpubCall, RequestsGetCall, MockGetResponse
+from blog_to_epub.util.utils import write_to_epub, get_all_urls
 from ebooklib import epub
 from assertpy import assert_that
 
@@ -27,3 +27,56 @@ def test__write_to_epub__creates_epub_book(
     assert_that(result.items[2]).is_same_as(second_chapter)
     assert_that(result.items[3]).is_instance_of(epub.EpubNcx)
     assert_that(result.items[4]).is_instance_of(epub.EpubNav)
+
+
+def test__get_all_urls__returns_all_urls__from_initial_url(
+        requests_get_fixture: (list[RequestsGetCall], list[MockGetResponse])):
+    get_calls: list[RequestsGetCall] = requests_get_fixture[0]
+    get_mock_responses: list[MockGetResponse] = requests_get_fixture[1]
+
+    get_mock_responses.append(
+        MockGetResponse(
+            {
+                'feed': {
+                    'link': [
+                        {'rel': 'next', 'href': 'http://example.com?page=2'}
+                    ]
+                }
+            }
+        )
+    )
+
+    get_mock_responses.append(
+        MockGetResponse(
+            {
+                'feed': {
+                    'link': [
+                        {'rel': 'next', 'href': 'http://example.com?page=3'}
+                    ]
+                }
+            }
+        )
+    )
+
+    get_mock_responses.append(
+        MockGetResponse(
+            {
+                'feed': {
+                    'link': []
+                }
+            }
+        )
+    )
+
+    initial_url: str = 'http://example.com'
+    result: list[str] = get_all_urls(initial_url)
+
+    assert_that(result).is_length(3)
+    assert_that(result[0]).is_equal_to('http://example.com')
+    assert_that(result[1]).is_equal_to('http://example.com?page=2')
+    assert_that(result[2]).is_equal_to('http://example.com?page=3')
+
+    assert_that(get_calls).is_length(3)
+    assert_that(get_calls[0].args[0]).is_equal_to('http://example.com')
+    assert_that(get_calls[1].args[0]).is_equal_to('http://example.com?page=2')
+    assert_that(get_calls[2].args[0]).is_equal_to('http://example.com?page=3')
