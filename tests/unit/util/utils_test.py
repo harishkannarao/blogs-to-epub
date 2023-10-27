@@ -1,7 +1,9 @@
-from tests.unit.conftest import WriteEpubCall, RequestsGetCall, MockGetResponse
-from blog_to_epub.util.utils import write_to_epub, get_all_urls
-from ebooklib import epub
 from assertpy import assert_that
+from ebooklib import epub
+
+from blog_to_epub.util.utils import write_to_epub, get_all_urls
+from tests.unit.conftest import WriteEpubCall, RequestsGetCall, MockGetResponse
+from tests.unit.response.response_generator import create_mock_get_response
 
 
 def test__write_to_epub__creates_epub_book(
@@ -34,39 +36,11 @@ def test__get_all_urls__returns_all_urls__from_initial_url(
     get_calls: list[RequestsGetCall] = requests_get_fixture[0]
     get_mock_responses: list[MockGetResponse] = requests_get_fixture[1]
 
-    get_mock_responses.append(
-        MockGetResponse(
-            {
-                'feed': {
-                    'link': [
-                        {'rel': 'next', 'href': 'http://example.com?page=2'}
-                    ]
-                }
-            }
-        )
-    )
-
-    get_mock_responses.append(
-        MockGetResponse(
-            {
-                'feed': {
-                    'link': [
-                        {'rel': 'next', 'href': 'http://example.com?page=3'}
-                    ]
-                }
-            }
-        )
-    )
-
-    get_mock_responses.append(
-        MockGetResponse(
-            {
-                'feed': {
-                    'link': []
-                }
-            }
-        )
-    )
+    get_mock_responses.extend([
+        create_mock_get_response(next_link='http://example.com?page=2'),
+        create_mock_get_response(next_link='http://example.com?page=3'),
+        create_mock_get_response(next_link=None),
+    ])
 
     initial_url: str = 'http://example.com'
     result: list[str] = get_all_urls(initial_url)
