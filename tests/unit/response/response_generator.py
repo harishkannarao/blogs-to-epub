@@ -1,7 +1,7 @@
 from tests.unit.conftest import MockGetResponse
 
 
-def create_mock_get_response(next_link: str = None) -> MockGetResponse:
+def create_blog_response(next_link: str = None) -> MockGetResponse:
     links = []
     if next_link is not None:
         links.append({'rel': 'next', 'href': next_link})

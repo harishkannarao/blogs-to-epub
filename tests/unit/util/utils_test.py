@@ -3,7 +3,7 @@ from ebooklib import epub
 
 from blog_to_epub.util.utils import write_to_epub, get_all_urls
 from tests.unit.conftest import WriteEpubCall, RequestsGetCall, MockGetResponse
-from tests.unit.response.response_generator import create_mock_get_response
+from tests.unit.response.response_generator import create_blog_response
 
 
 def test__write_to_epub__creates_epub_book(
@@ -37,9 +37,9 @@ def test__get_all_urls__returns_all_urls__from_initial_url(
     get_mock_responses: list[MockGetResponse] = requests_get_fixture[1]
 
     get_mock_responses.extend([
-        create_mock_get_response(next_link='http://example.com?page=2'),
-        create_mock_get_response(next_link='http://example.com?page=3'),
-        create_mock_get_response(next_link=None),
+        create_blog_response(next_link='http://example.com?page=2'),
+        create_blog_response(next_link='http://example.com?page=3'),
+        create_blog_response(next_link=None),
     ])
 
     initial_url: str = 'http://example.com'
