@@ -81,6 +81,18 @@ def test__get_all_chapters__returns_all_chapters_from_urls(
 
     assert_that(result).is_length(4)
 
+    assert_that(result[0].title).is_equal_to('title 1')
+    assert_that(result[0].content).is_equal_to('chapter 1')
+
+    assert_that(result[1].title).is_equal_to('title 2')
+    assert_that(result[1].content).is_equal_to('chapter 2')
+
+    assert_that(result[2].title).is_equal_to('title 3')
+    assert_that(result[2].content).is_equal_to('chapter 3')
+
+    assert_that(result[3].title).is_equal_to('title 4')
+    assert_that(result[3].content).is_equal_to('chapter 4')
+
     assert_that(get_calls).is_length(2)
     assert_that(get_calls[0].args[0]).is_equal_to('http://example.com?page=2')
     assert_that(get_calls[1].args[0]).is_equal_to('http://example.com')
