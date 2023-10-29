@@ -8,10 +8,15 @@ import requests
 
 
 @dataclass(frozen=True)
-class MkdirCall:
-    path: str
+class ArgsKwArgsPair:
     args: tuple[any]
     kwargs: MappingProxyType[any]
+
+
+@dataclass(frozen=True)
+class MkdirCall:
+    path: str
+    argsPair: ArgsKwArgsPair
 
 
 @pytest.fixture
@@ -19,7 +24,7 @@ def path_mkdir_fixture(monkeypatch) -> list[MkdirCall]:
     mkdir_calls: list[MkdirCall] = []
 
     def mock_mkdir(self: Path, *args: any, **kwargs: any):
-        mkdir_calls.append(MkdirCall(str(self), tuple(args), MappingProxyType(kwargs)))
+        mkdir_calls.append(MkdirCall(str(self), ArgsKwArgsPair(tuple(args), MappingProxyType(kwargs))))
         return
 
     monkeypatch.setattr(Path, "mkdir", mock_mkdir)
@@ -46,12 +51,6 @@ def epub_write_fixture(monkeypatch) -> list[WriteEpubCall]:
 
 
 @dataclass(frozen=True)
-class RequestsGetCall:
-    args: tuple[any]
-    kwargs: MappingProxyType[any]
-
-
-@dataclass(frozen=True)
 class MockGetResponse:
     response: any
 
@@ -60,12 +59,12 @@ class MockGetResponse:
 
 
 @pytest.fixture
-def requests_get_fixture(monkeypatch) -> (list[RequestsGetCall], list[MockGetResponse]):
-    requests_get_calls: list[RequestsGetCall] = []
+def requests_get_fixture(monkeypatch) -> (list[ArgsKwArgsPair], list[MockGetResponse]):
+    requests_get_calls: list[ArgsKwArgsPair] = []
     mock_get_responses: list[MockGetResponse] = []
 
     def mock_get(*args: any, **kwargs: any):
-        requests_get_calls.append(RequestsGetCall(tuple(args), MappingProxyType(kwargs)))
+        requests_get_calls.append(ArgsKwArgsPair(tuple(args), MappingProxyType(kwargs)))
         if len(mock_get_responses) == 0:
             raise RuntimeError("response list is empty")
         resp = mock_get_responses[0]

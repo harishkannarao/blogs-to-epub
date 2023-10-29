@@ -4,7 +4,7 @@ from ebooklib import epub
 from blog_to_epub.util.utils import write_to_epub
 from blog_to_epub.util.utils import get_all_urls
 from blog_to_epub.util.utils import get_all_chapters
-from tests.unit.conftest import WriteEpubCall, RequestsGetCall, MockGetResponse
+from tests.unit.conftest import WriteEpubCall, ArgsKwArgsPair, MockGetResponse
 from tests.unit.response.response_generator import create_blog_response
 
 
@@ -35,9 +35,9 @@ def test__write_to_epub__creates_epub_book(
 
 
 def test__get_all_urls__returns_all_urls__from_initial_url(
-        requests_get_fixture: (list[RequestsGetCall], list[MockGetResponse])
+        requests_get_fixture: (list[ArgsKwArgsPair], list[MockGetResponse])
 ):
-    get_calls: list[RequestsGetCall] = requests_get_fixture[0]
+    get_calls: list[ArgsKwArgsPair] = requests_get_fixture[0]
     get_mock_responses: list[MockGetResponse] = requests_get_fixture[1]
 
     get_mock_responses.extend([
@@ -61,9 +61,9 @@ def test__get_all_urls__returns_all_urls__from_initial_url(
 
 
 def test__get_all_chapters__returns_all_chapters_from_urls(
-        requests_get_fixture: (list[RequestsGetCall], list[MockGetResponse])
+        requests_get_fixture: (list[ArgsKwArgsPair], list[MockGetResponse])
 ):
-    get_calls: list[RequestsGetCall] = requests_get_fixture[0]
+    get_calls: list[ArgsKwArgsPair] = requests_get_fixture[0]
     get_mock_responses: list[MockGetResponse] = requests_get_fixture[1]
 
     get_mock_responses.extend([
