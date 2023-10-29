@@ -104,16 +104,37 @@ def test__convert_to_single_epub__converts_given_url_to_epub(
         requests_get_fixture: (list[ArgsKwArgsPair], list[MockGetResponse]),
         epub_write_fixture: list[WriteEpubCall]
 ):
+    get_calls: list[ArgsKwArgsPair] = requests_get_fixture[0]
     get_mock_responses: list[MockGetResponse] = requests_get_fixture[1]
     get_mock_responses.extend([
-        create_blog_response(chapters=[
-            ('title 2', 'chapter 2'),
-            ('title 1', 'chapter 1'),
-        ]),
-        create_blog_response(chapters=[
-            ('title 4', 'chapter 4'),
-            ('title 3', 'chapter 3'),
-        ]),
+        create_blog_response(
+            next_link='http://www.example.com?page=2',
+            chapters=[
+                ('title 4', 'chapter 4'),
+                ('title 3', 'chapter 3'),
+            ]
+        ),
+        create_blog_response(
+            next_link=None,
+            chapters=[
+                ('title 2', 'chapter 2'),
+                ('title 1', 'chapter 1'),
+            ]
+        ),
+        create_blog_response(
+            next_link=None,
+            chapters=[
+                ('title 2', 'chapter 2'),
+                ('title 1', 'chapter 1'),
+            ]
+        ),
+        create_blog_response(
+            next_link='http://www.example.com?page=2',
+            chapters=[
+                ('title 4', 'chapter 4'),
+                ('title 3', 'chapter 3'),
+            ]
+        ),
     ])
 
     convert_to_single_epub(
@@ -127,3 +148,27 @@ def test__convert_to_single_epub__converts_given_url_to_epub(
     assert_that(path_mkdir_fixture[0].argsPair.args).is_length(0)
     assert_that(path_mkdir_fixture[0].argsPair.kwargs.get('parents')).is_true()
     assert_that(path_mkdir_fixture[0].argsPair.kwargs.get('exist_ok')).is_true()
+
+    assert_that(epub_write_fixture).is_length(1)
+    assert_that(epub_write_fixture[0].name).is_equal_to('/tmp/dir/out_file.epub')
+    assert_that(epub_write_fixture[0].options).is_equal_to({})
+
+    result = epub_write_fixture[0].book
+    assert_that(result.items).is_length(7)
+
+    meta_chapter: epub.EpubHtml = result.items[0]
+    assert_that(meta_chapter.content).contains("Url: " + "http://www.example.com")
+
+    assert_that(result.items[1].content).is_same_as('chapter 1')
+    assert_that(result.items[2].content).is_same_as('chapter 2')
+    assert_that(result.items[3].content).is_same_as('chapter 3')
+    assert_that(result.items[4].content).is_same_as('chapter 4')
+
+    assert_that(result.items[5]).is_instance_of(epub.EpubNcx)
+    assert_that(result.items[6]).is_instance_of(epub.EpubNav)
+
+    assert_that(get_calls).is_length(4)
+    assert_that(get_calls[0].args[0]).is_equal_to('http://www.example.com')
+    assert_that(get_calls[1].args[0]).is_equal_to('http://www.example.com?page=2')
+    assert_that(get_calls[2].args[0]).is_equal_to('http://www.example.com?page=2')
+    assert_that(get_calls[3].args[0]).is_equal_to('http://www.example.com')
