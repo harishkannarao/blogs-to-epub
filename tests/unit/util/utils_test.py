@@ -4,7 +4,8 @@ from ebooklib import epub
 from blog_to_epub.util.utils import write_to_epub
 from blog_to_epub.util.utils import get_all_urls
 from blog_to_epub.util.utils import get_all_chapters
-from tests.unit.conftest import WriteEpubCall, ArgsKwArgsPair, MockGetResponse
+from blog_to_epub.util.utils import convert_to_single_epub
+from tests.unit.conftest import WriteEpubCall, ArgsKwArgsPair, MockGetResponse, MkdirCall
 from tests.unit.response.response_generator import create_blog_response
 
 
@@ -96,3 +97,33 @@ def test__get_all_chapters__returns_all_chapters_from_urls(
     assert_that(get_calls).is_length(2)
     assert_that(get_calls[0].args[0]).is_equal_to('http://example.com?page=2')
     assert_that(get_calls[1].args[0]).is_equal_to('http://example.com')
+
+
+def test__convert_to_single_epub__converts_given_url_to_epub(
+        path_mkdir_fixture: list[MkdirCall],
+        requests_get_fixture: (list[ArgsKwArgsPair], list[MockGetResponse]),
+        epub_write_fixture: list[WriteEpubCall]
+):
+    get_mock_responses: list[MockGetResponse] = requests_get_fixture[1]
+    get_mock_responses.extend([
+        create_blog_response(chapters=[
+            ('title 2', 'chapter 2'),
+            ('title 1', 'chapter 1'),
+        ]),
+        create_blog_response(chapters=[
+            ('title 4', 'chapter 4'),
+            ('title 3', 'chapter 3'),
+        ]),
+    ])
+
+    convert_to_single_epub(
+        "/tmp/dir",
+        "out_file",
+        "http://www.example.com"
+    )
+
+    assert_that(path_mkdir_fixture).is_length(1)
+    assert_that(path_mkdir_fixture[0].path).is_equal_to('/tmp/dir')
+    assert_that(path_mkdir_fixture[0].argsPair.args).is_length(0)
+    assert_that(path_mkdir_fixture[0].argsPair.kwargs.get('parents')).is_true()
+    assert_that(path_mkdir_fixture[0].argsPair.kwargs.get('exist_ok')).is_true()
