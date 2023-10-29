@@ -4,29 +4,19 @@ from ebooklib import epub
 from datetime import datetime, timezone
 
 
-def get_all_urls(initial_url: str) -> list[str]:
-    all_urls = []
+def get_all_chapters_from_url(initial_url: str) -> list[epub.EpubHtml]:
+    chapters: list[epub.EpubHtml] = []
+    chapter_index = 1
     url = initial_url
     while url is not None:
-        all_urls.append(url)
         response = requests.get(url)
         res_json = response.json()
         url = None
         for link in res_json['feed']['link']:
             if link['rel'] == 'next':
                 url = link['href']
-
-    return all_urls
-
-
-def get_all_chapters(urls: list[str]) -> list[epub.EpubHtml]:
-    chapters = []
-    chapter_index = 1
-    for url in reversed(urls):
-        response = requests.get(url)
-        res_json = response.json()
         if 'entry' in res_json['feed']:
-            for entry in reversed(res_json['feed']['entry']):
+            for entry in res_json['feed']['entry']:
                 html_content = entry['content']['$t']
                 title = ''
                 for entry_link in entry['link']:
@@ -36,7 +26,8 @@ def get_all_chapters(urls: list[str]) -> list[epub.EpubHtml]:
                 html_chapter.content = html_content
                 chapter_index = chapter_index + 1
                 chapters.append(html_chapter)
-    return chapters
+    chapters.reverse()
+    return [*chapters]
 
 
 def write_to_epub(output_dir: str, file_name: str, url: str, chapters: list[epub.EpubHtml]) -> None:
@@ -75,7 +66,6 @@ def write_to_epub(output_dir: str, file_name: str, url: str, chapters: list[epub
 
 def convert_to_single_epub(output_dir: str, file_name: str, url: str):
     Path(output_dir).mkdir(parents=True, exist_ok=True)
-    urls: list[str] = get_all_urls(url)
-    chapters: list[epub.EpubHtml] = get_all_chapters(urls)
+    chapters: list[epub.EpubHtml] = get_all_chapters_from_url(url)
     write_to_epub(output_dir, file_name, url, chapters)
     return
