@@ -65,3 +65,7 @@ Filter blogs by categories
 ### Create requirements.txt
 
     make requirements
+
+### Run all commands
+
+    make run_all
