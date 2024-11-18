@@ -14,6 +14,12 @@ Credit goes to the authors and contributors of the following repositories:
 * git `latest`
 * pycharm `latest`
 
+## One Time PyCharm Setup
+
+To run `pytest` tests in `PyCharm`, make the project root directory as test root directory by
+
+    Right Click Root directory -> Mark Directory As -> Test Sources Root
+
 ## Commands
 
 ### Install dependencies
@@ -35,6 +41,14 @@ example
 example
 
     pipenv run python main.py --dir /tmp --single-file --name harish_blogs --url 'http://blogs.harishkannarao.com/feeds/posts/default?alt=json'
+
+### Run python script to load individual blog post
+
+    pipenv run python main.py --dir /tmp --load-individual-page --name example_name --url '<<BLOG_URL>>/feeds/posts/default?alt=json'
+
+example
+
+    pipenv run python main.py --dir /tmp --load-individual-page --name harish_blogs --url 'http://blogs.harishkannarao.com/feeds/posts/default?alt=json'
 
 #### Other Url formats to filter the blogs
 

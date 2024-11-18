@@ -55,7 +55,7 @@ def test__get_all_chapters_from_url__returns_all_chapters_from_url(
             ]),
     ])
 
-    result = get_all_chapters_from_url('http://example.com')
+    result = get_all_chapters_from_url('http://example.com', False)
 
     assert_that(result).is_length(4)
 
@@ -117,7 +117,8 @@ def test__convert_to_single_epub__converts_given_url_to_epub(
     convert_to_single_epub(
         "/tmp/dir",
         "out_file",
-        "http://www.example.com"
+        "http://www.example.com",
+        False
     )
 
     assert_that(path_mkdir_fixture).is_length(1)

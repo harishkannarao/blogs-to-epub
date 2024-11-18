@@ -15,7 +15,7 @@ def create_blog_response(
         entries.append({
             'content': {'$t': content},
             'link': [
-                {'rel': 'alternate', 'title': title}
+                {'rel': 'alternate', 'title': title, 'href': 'http://www.example.com'}
             ]
         })
     feed = {'link': links, 'entry': entries}
