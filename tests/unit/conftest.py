@@ -58,6 +58,11 @@ class MockGetResponse:
         return self.response
 
 
+@dataclass(frozen=True)
+class MockGetTextResponse:
+    text: str
+
+
 @pytest.fixture
 def requests_get_fixture(monkeypatch) -> (list[ArgsKwArgsPair], list[MockGetResponse]):
     requests_get_calls: list[ArgsKwArgsPair] = []
