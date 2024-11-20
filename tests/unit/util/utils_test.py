@@ -1,10 +1,10 @@
 from assertpy import assert_that
 from ebooklib import epub
 
-from blog_to_epub.util.utils import write_to_epub
-from blog_to_epub.util.utils import get_all_chapters_from_url
 from blog_to_epub.util.utils import convert_to_single_epub
-from tests.unit.conftest import WriteEpubCall, ArgsKwArgsPair, MockGetResponse, MkdirCall, MockGetTextResponse
+from blog_to_epub.util.utils import get_all_chapters_from_url
+from blog_to_epub.util.utils import write_to_epub
+from tests.unit.conftest import WriteEpubCall, ArgsKwArgsPair, MockGetResponse, MkdirCall
 from tests.unit.response.response_generator import create_blog_response
 
 
@@ -80,7 +80,7 @@ def test__get_all_chapters_from_url__loads_individual_chapter_from_url(
         requests_get_fixture: (list[ArgsKwArgsPair], list[MockGetResponse])
 ):
     get_calls: list[ArgsKwArgsPair] = requests_get_fixture[0]
-    get_mock_responses: list[any] = requests_get_fixture[1]
+    get_mock_responses: list[MockGetResponse] = requests_get_fixture[1]
 
     get_mock_responses.extend([
         create_blog_response(
@@ -89,16 +89,16 @@ def test__get_all_chapters_from_url__loads_individual_chapter_from_url(
                 ('title 4', 'chapter 4', 'http://example.com/chap-4'),
                 ('title 3', 'chapter 3', 'http://example.com/chap-3'),
             ]),
-        MockGetTextResponse('chapter 4'),
-        MockGetTextResponse('chapter 3'),
+        MockGetResponse('chapter 4'),
+        MockGetResponse('chapter 3'),
         create_blog_response(
             next_link=None,
             chapters=[
                 ('title 2', 'chapter 2', 'http://example.com/chap-2'),
                 ('title 1', 'chapter 1', 'http://example.com/chap-1'),
             ]),
-        MockGetTextResponse('chapter 2'),
-        MockGetTextResponse('chapter 1'),
+        MockGetResponse('chapter 2'),
+        MockGetResponse('chapter 1'),
     ])
 
     result = get_all_chapters_from_url('http://example.com', True)
@@ -192,7 +192,7 @@ def test__convert_to_single_epub__loading_chapters_from_individual_url(
         epub_write_fixture: list[WriteEpubCall]
 ):
     get_calls: list[ArgsKwArgsPair] = requests_get_fixture[0]
-    get_mock_responses: list[any] = requests_get_fixture[1]
+    get_mock_responses: list[MockGetResponse] = requests_get_fixture[1]
     get_mock_responses.extend([
         create_blog_response(
             next_link='http://example.com?page=2',
@@ -200,16 +200,16 @@ def test__convert_to_single_epub__loading_chapters_from_individual_url(
                 ('title 4', 'chapter 4', 'http://example.com/chap-4'),
                 ('title 3', 'chapter 3', 'http://example.com/chap-3'),
             ]),
-        MockGetTextResponse('chapter 4'),
-        MockGetTextResponse('chapter 3'),
+        MockGetResponse('chapter 4'),
+        MockGetResponse('chapter 3'),
         create_blog_response(
             next_link=None,
             chapters=[
                 ('title 2', 'chapter 2', 'http://example.com/chap-2'),
                 ('title 1', 'chapter 1', 'http://example.com/chap-1'),
             ]),
-        MockGetTextResponse('chapter 2'),
-        MockGetTextResponse('chapter 1'),
+        MockGetResponse('chapter 2'),
+        MockGetResponse('chapter 1'),
     ])
 
     convert_to_single_epub(

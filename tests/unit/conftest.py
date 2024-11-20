@@ -50,17 +50,16 @@ def epub_write_fixture(monkeypatch) -> list[WriteEpubCall]:
     yield write_epub_calls
 
 
-@dataclass(frozen=True)
+@dataclass
 class MockGetResponse:
     response: any
 
     def json(self):
         return self.response
 
-
-@dataclass(frozen=True)
-class MockGetTextResponse:
-    text: str
+    @property
+    def text(self):
+        return str(self.response)
 
 
 @pytest.fixture
