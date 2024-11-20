@@ -80,7 +80,7 @@ def test__get_all_chapters_from_url__loads_individual_chapter_from_url(
         requests_get_fixture: (list[ArgsKwArgsPair], list[MockGetResponse])
 ):
     get_calls: list[ArgsKwArgsPair] = requests_get_fixture[0]
-    get_mock_responses: list[MockGetResponse] = requests_get_fixture[1]
+    get_mock_responses: list[any] = requests_get_fixture[1]
 
     get_mock_responses.extend([
         create_blog_response(
@@ -192,7 +192,7 @@ def test__convert_to_single_epub__loading_chapters_from_individual_url(
         epub_write_fixture: list[WriteEpubCall]
 ):
     get_calls: list[ArgsKwArgsPair] = requests_get_fixture[0]
-    get_mock_responses: list[MockGetResponse] = requests_get_fixture[1]
+    get_mock_responses: list[any] = requests_get_fixture[1]
     get_mock_responses.extend([
         create_blog_response(
             next_link='http://example.com?page=2',
