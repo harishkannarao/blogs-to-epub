@@ -22,7 +22,7 @@ Setup `python` interpreter to virtual env as:
 
 To run `pytest` tests in `PyCharm`, make the project root directory as test root directory by
 
-    Right Click Root directory -> Mark Directory As -> Test Sources Root
+    Right Click Project Root directory -> Mark Directory As -> Test Sources Root
 
 ## Commands
 
